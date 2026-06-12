@@ -1,0 +1,1821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Accenture SFDC Stream — Ultimate Training Guide</title>
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --surface: #111827;
+    --surface2: #1a2235;
+    --border: #1e2d45;
+    --accent: #00b4d8;
+    --accent2: #7c3aed;
+    --accent3: #10b981;
+    --warn: #f59e0b;
+    --danger: #ef4444;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --tag-blue: rgba(0,180,216,0.12);
+    --tag-green: rgba(16,185,129,0.12);
+    --tag-orange: rgba(245,158,11,0.12);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* NAV */
+  nav {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: sticky; top: 0; z-index: 100;
+    flex-wrap: wrap;
+  }
+  nav .logo {
+    font-size: 16px; font-weight: 700;
+    color: var(--accent);
+    margin-right: 16px;
+    white-space: nowrap;
+  }
+  nav .logo span { color: var(--text); }
+  .nav-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 5px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all .2s;
+    white-space: nowrap;
+  }
+  .nav-btn:hover, .nav-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #000;
+    font-weight: 600;
+  }
+
+  /* SECTIONS */
+  .section { display: none; padding: 24px 20px; max-width: 960px; margin: 0 auto; }
+  .section.active { display: block; }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, #0a0e1a 0%, #0d1b2e 50%, #0a1628 100%);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(0,180,216,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero h1 { font-size: 26px; font-weight: 800; color: var(--accent); line-height: 1.2; }
+  .hero h1 span { color: var(--text); }
+  .hero p { color: var(--muted); margin-top: 8px; font-size: 13px; }
+  .badge-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+  .badge {
+    padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600;
+  }
+  .badge.blue { background: var(--tag-blue); color: var(--accent); border: 1px solid rgba(0,180,216,0.3); }
+  .badge.green { background: var(--tag-green); color: var(--accent3); border: 1px solid rgba(16,185,129,0.3); }
+  .badge.orange { background: var(--tag-orange); color: var(--warn); border: 1px solid rgba(245,158,11,0.3); }
+  .badge.purple { background: rgba(124,58,237,0.12); color: #a78bfa; border: 1px solid rgba(124,58,237,0.3); }
+
+  /* CARDS */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .card h3 {
+    font-size: 14px; font-weight: 700; color: var(--accent);
+    margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+  }
+  .card h2 {
+    font-size: 16px; font-weight: 700; color: var(--text);
+    margin-bottom: 14px;
+  }
+  .section-title {
+    font-size: 18px; font-weight: 800; color: var(--text);
+    margin-bottom: 6px;
+  }
+  .section-sub { color: var(--muted); font-size: 13px; margin-bottom: 20px; }
+
+  /* TASK LIST */
+  .task-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    margin-bottom: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    transition: border-color .2s;
+  }
+  .task-item:hover { border-color: var(--accent); }
+  .task-num {
+    font-size: 11px; font-weight: 700; color: var(--muted);
+    min-width: 28px; padding-top: 1px;
+  }
+  .task-text { font-size: 13px; color: var(--text); flex: 1; }
+  .prob-pill {
+    font-size: 10px; font-weight: 700; padding: 2px 8px;
+    border-radius: 10px; white-space: nowrap;
+  }
+  .very-high { background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+  .high { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
+  .medium { background: rgba(100,116,139,0.2); color: var(--muted); border: 1px solid var(--border); }
+
+  /* CODE */
+  pre {
+    background: #060a14;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    overflow-x: auto;
+    font-size: 12px;
+    line-height: 1.7;
+    font-family: 'Consolas', 'Courier New', monospace;
+    color: #a8dadc;
+    margin: 10px 0;
+  }
+  code { font-family: 'Consolas', 'Courier New', monospace; }
+  .kw { color: #7c3aed; }
+  .str { color: #10b981; }
+  .cm { color: #475569; }
+  .fn { color: #00b4d8; }
+  .num { color: #f59e0b; }
+
+  /* Q&A */
+  .qa-item {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+  .qa-q {
+    background: var(--surface2);
+    padding: 12px 16px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    transition: background .2s;
+  }
+  .qa-q:hover { background: #1e2d45; }
+  .qa-q .arrow { font-size: 10px; color: var(--muted); transition: transform .2s; }
+  .qa-q.open .arrow { transform: rotate(180deg); }
+  .qa-a {
+    display: none;
+    padding: 14px 16px;
+    background: var(--surface);
+    font-size: 13px;
+    color: #94a3b8;
+    line-height: 1.7;
+    border-top: 1px solid var(--border);
+  }
+  .qa-a.visible { display: block; }
+  .qa-a ul { padding-left: 18px; }
+  .qa-a li { margin-bottom: 4px; }
+
+  /* MCQ */
+  .mcq-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .mcq-q { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 10px; }
+  .mcq-opt {
+    padding: 7px 12px;
+    border-radius: 6px;
+    margin: 4px 0;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--muted);
+    transition: all .15s;
+  }
+  .mcq-opt:hover { border-color: var(--accent); color: var(--text); }
+  .mcq-opt.correct { background: rgba(16,185,129,0.1); border-color: var(--accent3); color: var(--accent3); }
+  .mcq-opt.wrong { background: rgba(239,68,68,0.1); border-color: var(--danger); color: #f87171; }
+  .mcq-explain {
+    margin-top: 10px; padding: 10px;
+    background: rgba(0,180,216,0.06);
+    border-radius: 6px; border-left: 3px solid var(--accent);
+    font-size: 12px; color: var(--muted); display: none;
+  }
+
+  /* LAB */
+  .lab-step {
+    display: flex; gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .lab-step:last-child { border-bottom: none; }
+  .step-icon {
+    width: 28px; height: 28px;
+    background: var(--accent);
+    color: #000; font-weight: 800;
+    font-size: 11px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .step-body { flex: 1; }
+  .step-title { font-size: 13px; font-weight: 700; color: var(--text); }
+  .step-desc { font-size: 12px; color: var(--muted); margin-top: 3px; }
+
+  /* TABS within section */
+  .tabs {
+    display: flex; gap: 6px; flex-wrap: wrap;
+    margin-bottom: 18px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 10px;
+  }
+  .tab-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 6px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all .2s;
+  }
+  .tab-btn.active, .tab-btn:hover {
+    background: var(--accent2);
+    border-color: var(--accent2);
+    color: #fff;
+  }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* SIMULATOR */
+  .sim-card {
+    background: var(--surface);
+    border: 2px solid var(--accent);
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .sim-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 2px;
+    color: var(--accent); text-transform: uppercase; margin-bottom: 8px;
+  }
+  .sim-task { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
+  .sim-desc { font-size: 13px; color: var(--muted); margin-bottom: 16px; line-height: 1.7; }
+  textarea.answer-box {
+    width: 100%; min-height: 100px;
+    background: #060a14;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'Consolas', monospace;
+    font-size: 13px;
+    padding: 12px;
+    resize: vertical;
+  }
+  textarea.answer-box:focus { outline: none; border-color: var(--accent); }
+  .btn {
+    background: var(--accent);
+    color: #000; font-weight: 700;
+    padding: 9px 20px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    transition: opacity .2s;
+    margin-top: 10px;
+    margin-right: 8px;
+  }
+  .btn:hover { opacity: .85; }
+  .btn.secondary {
+    background: var(--surface2);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .score-box {
+    background: var(--surface2);
+    border: 1px solid var(--accent3);
+    border-radius: 10px;
+    padding: 16px;
+    margin-top: 14px;
+    display: none;
+  }
+  .score-num {
+    font-size: 32px; font-weight: 800; color: var(--accent3);
+  }
+  .score-tag { font-size: 12px; color: var(--muted); }
+  .tip-box {
+    background: rgba(124,58,237,0.08);
+    border: 1px solid rgba(124,58,237,0.25);
+    border-radius: 8px;
+    padding: 12px;
+    margin-top: 10px;
+    font-size: 12px;
+    color: #c4b5fd;
+  }
+  .tip-box strong { color: #a78bfa; }
+
+  /* CRASH COURSE */
+  .topic-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .topic-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 12px;
+    color: var(--text);
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .topic-icon { font-size: 16px; flex-shrink: 0; }
+
+  /* SURVIVAL */
+  .day-block {
+    border-left: 3px solid var(--accent);
+    padding-left: 16px;
+    margin-bottom: 24px;
+  }
+  .day-label {
+    font-size: 13px; font-weight: 700; color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .hour-row {
+    display: flex; gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    align-items: flex-start;
+  }
+  .hour-row:last-child { border-bottom: none; }
+  .hour-label {
+    min-width: 90px; font-weight: 700;
+    color: var(--warn);
+  }
+  .hour-text { color: var(--muted); flex: 1; }
+
+  /* EMERGENCY */
+  .emg-item {
+    background: rgba(239,68,68,0.06);
+    border: 1px solid rgba(239,68,68,0.2);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    font-size: 13px;
+    color: var(--text);
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .emg-num {
+    background: var(--danger);
+    color: #fff;
+    font-weight: 800;
+    font-size: 11px;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  /* RESPONSIVE */
+  @media(max-width:600px) {
+    nav { gap: 6px; }
+    .hero h1 { font-size: 20px; }
+    .topic-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  hr { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+  .highlight { color: var(--accent); font-weight: 700; }
+  .green-text { color: var(--accent3); font-weight: 600; }
+  .orange-text { color: var(--warn); font-weight: 600; }
+  .red-text { color: var(--danger); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">⚡ SFDC <span>Training</span></div>
+  <button class="nav-btn active" onclick="showSection('home')">🏠 Home</button>
+  <button class="nav-btn" onclick="showSection('tasks')">📋 100 Tasks</button>
+  <button class="nav-btn" onclick="showSection('competency')">❓ Competency Q&A</button>
+  <button class="nav-btn" onclick="showSection('labs')">🧪 Hands-on Labs</button>
+  <button class="nav-btn" onclick="showSection('simulator')">🎯 Assessor</button>
+  <button class="nav-btn" onclick="showSection('crash')">⚡ Crash Course</button>
+  <button class="nav-btn" onclick="showSection('survival')">🚨 Survival Mode</button>
+</nav>
+
+<!-- ===== HOME ===== -->
+<div class="section active" id="home">
+  <div class="hero">
+    <h1>Accenture ASE<br><span>SFDC Stream — Complete Training Kit</span></h1>
+    <p>Built for freshers. Covers Admin · Apex · Triggers · SOQL · LWC · Flow Builder</p>
+    <div class="badge-row">
+      <span class="badge blue">100 Hands-on Tasks</span>
+      <span class="badge green">50+ Competency Questions</span>
+      <span class="badge orange">MCQs + Debugging</span>
+      <span class="badge purple">Real Assessment Simulator</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🔍 What Accenture SFDC Training Looks Like (Real Intel)</h2>
+    <div class="task-item">
+      <div class="task-num">📌</div>
+      <div class="task-text"><strong class="highlight">Duration:</strong> 4–5 weeks stream training. You'll work on a mini case study + a 3-hour hands-on coding exam + a 40-question MCQ test.</div>
+    </div>
+    <div class="task-item">
+      <div class="task-num">📌</div>
+      <div class="task-text"><strong class="highlight">Case Study:</strong> 5-day team project (build a Salesforce app). External examiner evaluates your contribution + asks individual questions.</div>
+    </div>
+    <div class="task-item">
+      <div class="task-num">📌</div>
+      <div class="task-text"><strong class="highlight">Hands-On Exam:</strong> 3-hour session. You get a problem statement — build it in Salesforce. Admin + Apex + Trigger tasks are most common.</div>
+    </div>
+    <div class="task-item">
+      <div class="task-num">📌</div>
+      <div class="task-text"><strong class="highlight">MCQ Test:</strong> ~40 questions. Moderate to tough. Concept-based — not direct copy from material.</div>
+    </div>
+    <div class="task-item">
+      <div class="task-num">📌</div>
+      <div class="task-text"><strong class="highlight">Passing Score:</strong> 60% first attempt. 65% if resitting. <span class="red-text">Don't rely on resit!</span></div>
+    </div>
+    <div class="task-item">
+      <div class="task-num">📌</div>
+      <div class="task-text"><strong class="highlight">Key Tip:</strong> Understand what YOU built in the case study. The examiner grills you individually on your own code.</div>
+    </div>
+  </div>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+    <div class="card" style="border-color:rgba(0,180,216,0.3);">
+      <h3>🔥 Hottest Topics</h3>
+      <div style="font-size:12px; color:var(--muted); line-height:2;">
+        1. Custom Objects & Fields<br>
+        2. Apex Triggers (bulkified)<br>
+        3. SOQL in Apex<br>
+        4. Validation Rules<br>
+        5. Flow Builder (Record-triggered)<br>
+        6. LWC (basic component)<br>
+        7. Roll-Up Summary Fields<br>
+        8. Apex Test Classes (75%)<br>
+        9. Governor Limits<br>
+        10. Reports & Dashboards
+      </div>
+    </div>
+    <div class="card" style="border-color:rgba(239,68,68,0.3);">
+      <h3>❌ Most Failed Topics</h3>
+      <div style="font-size:12px; color:var(--muted); line-height:2;">
+        1. Trigger bulkification<br>
+        2. 75% test coverage rule<br>
+        3. Governor limits (DML/SOQL)<br>
+        4. @AuraEnabled in LWC<br>
+        5. Master-Detail vs Lookup<br>
+        6. Null checks in Apex<br>
+        7. Roll-up summary limitations<br>
+        8. SOQL in loops (anti-pattern)<br>
+        9. Sharing & security model<br>
+        10. Formula field syntax errors
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TASKS ===== -->
+<div class="section" id="tasks">
+  <div class="section-title">📋 Top 100 Hands-on Tasks</div>
+  <div class="section-sub">Ranked by probability of appearing in Accenture SFDC stream assessment</div>
+
+  <div class="card">
+    <h3>🔴 VERY HIGH PROBABILITY (Must-Know, Rank 1–35)</h3>
+    <div id="vhTasks"></div>
+  </div>
+
+  <div class="card">
+    <h3>🟡 HIGH PROBABILITY (Important, Rank 36–70)</h3>
+    <div id="hTasks"></div>
+  </div>
+
+  <div class="card">
+    <h3>🔵 MEDIUM PROBABILITY (Good-to-Know, Rank 71–100)</h3>
+    <div id="mTasks"></div>
+  </div>
+</div>
+
+<!-- ===== COMPETENCY ===== -->
+<div class="section" id="competency">
+  <div class="section-title">❓ Competency Assessment Questions</div>
+  <div class="section-sub">Click any question to reveal the answer</div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('comp','conceptual')">Conceptual</button>
+    <button class="tab-btn" onclick="switchTab('comp','scenario')">Scenario-Based</button>
+    <button class="tab-btn" onclick="switchTab('comp','mcq')">MCQs</button>
+    <button class="tab-btn" onclick="switchTab('comp','debug')">Debugging</button>
+    <button class="tab-btn" onclick="switchTab('comp','coding')">Coding</button>
+  </div>
+
+  <div class="tab-content active" id="comp-conceptual">
+    <div id="conceptualQA"></div>
+  </div>
+  <div class="tab-content" id="comp-scenario">
+    <div id="scenarioQA"></div>
+  </div>
+  <div class="tab-content" id="comp-mcq">
+    <div id="mcqContainer"></div>
+  </div>
+  <div class="tab-content" id="comp-debug">
+    <div id="debugQA"></div>
+  </div>
+  <div class="tab-content" id="comp-coding">
+    <div id="codingQA"></div>
+  </div>
+</div>
+
+<!-- ===== LABS ===== -->
+<div class="section" id="labs">
+  <div class="section-title">🧪 Complete Hands-on Labs</div>
+  <div class="section-sub">Step-by-step instructions — follow these in your Developer Org</div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('lab','admin')">Admin</button>
+    <button class="tab-btn" onclick="switchTab('lab','soql')">SOQL</button>
+    <button class="tab-btn" onclick="switchTab('lab','apex')">Apex</button>
+    <button class="tab-btn" onclick="switchTab('lab','trigger')">Triggers</button>
+    <button class="tab-btn" onclick="switchTab('lab','test')">Test Classes</button>
+    <button class="tab-btn" onclick="switchTab('lab','lwc')">LWC</button>
+    <button class="tab-btn" onclick="switchTab('lab','flow')">Flow Builder</button>
+  </div>
+
+  <div class="tab-content active" id="lab-admin">
+    <div id="adminLabs"></div>
+  </div>
+  <div class="tab-content" id="lab-soql">
+    <div id="soqlLabs"></div>
+  </div>
+  <div class="tab-content" id="lab-apex">
+    <div id="apexLabs"></div>
+  </div>
+  <div class="tab-content" id="lab-trigger">
+    <div id="triggerLabs"></div>
+  </div>
+  <div class="tab-content" id="lab-test">
+    <div id="testLabs"></div>
+  </div>
+  <div class="tab-content" id="lab-lwc">
+    <div id="lwcLabs"></div>
+  </div>
+  <div class="tab-content" id="lab-flow">
+    <div id="flowLabs"></div>
+  </div>
+</div>
+
+<!-- ===== SIMULATOR ===== -->
+<div class="section" id="simulator">
+  <div class="section-title">🎯 Real Assessment Simulator</div>
+  <div class="section-sub">I'll act as your Accenture examiner. Attempt the task, then reveal the evaluation.</div>
+  <div id="simContainer"></div>
+</div>
+
+<!-- ===== CRASH COURSE ===== -->
+<div class="section" id="crash">
+  <div class="section-title">⚡ Competency Crash Course</div>
+  <div class="section-sub">Everything you must know — fast</div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('cc','topics')">Top 20 Topics</button>
+    <button class="tab-btn" onclick="switchTab('cc','q50')">Top 50 Questions</button>
+    <button class="tab-btn" onclick="switchTab('cc','formulas')">Key Formulas</button>
+    <button class="tab-btn" onclick="switchTab('cc','soql')">Key SOQL</button>
+    <button class="tab-btn" onclick="switchTab('cc','patterns')">Trigger Patterns</button>
+  </div>
+  <div class="tab-content active" id="cc-topics"><div id="top20topics"></div></div>
+  <div class="tab-content" id="cc-q50"><div id="q50"></div></div>
+  <div class="tab-content" id="cc-formulas"><div id="keyFormulas"></div></div>
+  <div class="tab-content" id="cc-soql"><div id="keySoql"></div></div>
+  <div class="tab-content" id="cc-patterns"><div id="triggerPatterns"></div></div>
+</div>
+
+<!-- ===== SURVIVAL ===== -->
+<div class="section" id="survival">
+  <div class="section-title">🚨 Fresher Survival Mode</div>
+  <div class="section-sub">Choose your scenario</div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('sv','3days')">3 Days Left</button>
+    <button class="tab-btn" onclick="switchTab('sv','1day')">1 Day Left</button>
+    <button class="tab-btn" onclick="switchTab('sv','3hours')">3 Hours Left</button>
+  </div>
+  <div class="tab-content active" id="sv-3days"><div id="plan3days"></div></div>
+  <div class="tab-content" id="sv-1day"><div id="plan1day"></div></div>
+  <div class="tab-content" id="sv-3hours"><div id="plan3hours"></div></div>
+</div>
+
+<script>
+// ===================== NAVIGATION =====================
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function switchTab(prefix, id) {
+  const allContents = document.querySelectorAll(`[id^="${prefix}-"]`);
+  allContents.forEach(c => c.classList.remove('active'));
+  const allBtns = event.target.closest('.tabs').querySelectorAll('.tab-btn');
+  allBtns.forEach(b => b.classList.remove('active'));
+  document.getElementById(`${prefix}-${id}`).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ===================== TASKS DATA =====================
+const vhTasks = [
+  "Create a Custom Object called 'Student' with fields: Name, Roll Number (Number), Marks (Number), and Grade (Formula)",
+  "Create a Custom Object called 'Employee' with fields: Name, Employee ID (Auto Number), Department (Picklist), and Salary",
+  "Add a Formula Field on Opportunity to calculate Discount Amount (Amount * Discount_Percent__c / 100)",
+  "Create a Validation Rule on Account: Phone field must not be blank when Account Type is 'Customer'",
+  "Create a Lookup Relationship between Contact and a custom 'Project__c' object",
+  "Create a Master-Detail Relationship between 'Order__c' (child) and 'Account' (parent/standard)",
+  "Create a Roll-Up Summary field on Account to count the number of related Contacts",
+  "Write an Apex Trigger on Contact to automatically set the 'Description' field to 'New Contact' on insert",
+  "Write a Trigger on Opportunity that sets 'CloseDate' to today+30 if it's blank on insert",
+  "Write a SOQL query to fetch all Accounts where Type = 'Customer' and AnnualRevenue > 100000",
+  "Create a Report showing all Opportunities grouped by Stage with total Amount per stage",
+  "Create a Dashboard with a Bar Chart showing Opportunity Amount by Stage",
+  "Write an Apex Class with a method that accepts a List<Account> and updates all their descriptions",
+  "Write a Test Class for a simple Apex trigger with at least 75% code coverage",
+  "Create a Record-Triggered Flow that sends an email alert when an Opportunity Stage changes to 'Closed Won'",
+  "Create a basic LWC component that displays 'Hello, Salesforce!' on a page",
+  "Create a Validation Rule to prevent saving a Contact if Email does not contain '@'",
+  "Write a SOQL query to fetch all Contacts related to Accounts in 'Technology' industry",
+  "Write a bulkified Apex Trigger that works correctly when 200+ records are inserted",
+  "Create a Custom Tab for a Custom Object and add it to an App",
+  "Write a SOQL query using aggregate function: COUNT, SUM, MAX on Opportunity",
+  "Create a formula field on Contact to show Full Name as (FirstName + ' ' + LastName) in uppercase",
+  "Create a Page Layout for a custom object and add all relevant fields",
+  "Set up a Profile that restricts delete access on Accounts for a specific role",
+  "Create an Auto-Number field (e.g., EMP-{0000}) on a custom object",
+  "Write an Apex Trigger using a Handler Class pattern (thin trigger + handler)",
+  "Create a Rollup Summary to SUM the Amount of all Opportunities on the Account",
+  "Write a SOQL query with a subquery to get Accounts and their related Opportunities",
+  "Create a Flow that creates a Task when a new Lead is created",
+  "Create a Validation Rule using ISBLANK() and ISPICKVAL() functions",
+  "Write a Test Class using @TestSetup to create shared test data",
+  "Write an Apex method to prevent duplicate Account names using SOQL",
+  "Create a Dependent Picklist (State depends on Country)",
+  "Add a custom field to a Standard Object (e.g., add 'Budget__c' Currency field to Account)",
+  "Deploy metadata between sandboxes using Change Sets concept (describe the process)"
+];
+
+const hTasks = [
+  "Write a Trigger on Account that populates a custom 'Record_Count__c' field counting related Contacts",
+  "Create a Junction Object to model a Many-to-Many relationship between Student and Course",
+  "Write SOQL to fetch all records modified in the last 7 days using LastModifiedDate",
+  "Create a Formula Field that returns 'Red', 'Yellow', or 'Green' based on Opportunity probability",
+  "Build an LWC component that uses @wire to fetch Account records using getRecord",
+  "Write an Apex class with a static method to calculate compound interest",
+  "Create a Validation Rule using regular expression (REGEX) to validate phone format",
+  "Write a SOQL query using LIKE operator and wildcards",
+  "Create an Approval Process for Opportunity discounts above 20%",
+  "Write a Trigger that fires 'before insert' and 'before update' and handles both events",
+  "Create a Custom Metadata Type and use it in an Apex class",
+  "Write a Scheduled Apex class that runs daily to close overdue Opportunities",
+  "Build a Flow that collects user input using a Screen element and creates a record",
+  "Create a Report with cross-filter (Accounts without Contacts)",
+  "Write a Test Class that uses Test.startTest() and Test.stopTest() properly",
+  "Create a List View for Contacts showing only contacts from 'Technology' accounts",
+  "Write SOQL with ORDER BY, LIMIT, and OFFSET clauses",
+  "Create a Workflow Rule equivalent using Flow (field update on record change)",
+  "Write an Apex trigger that prevents deletion of Opportunities if Stage is 'Closed Won'",
+  "Create a Master-Detail relationship between 'Invoice__c' and 'Invoice_Line_Item__c'",
+  "Write a for loop in Apex to iterate over a List and populate a Map",
+  "Create a formula field using IF(), AND(), OR() nested functions",
+  "Build a simple LWC that calls an Apex method using @wire and displays results",
+  "Write a Test Class for an Apex class that queries the database",
+  "Create a permission set granting 'Edit' access to a specific custom object",
+  "Write SOQL to query polymorphic fields on Task (WhoId / WhatId)",
+  "Create a lookup filter on a Relationship field",
+  "Write an Apex Trigger that enforces only 1 active Case per Contact",
+  "Use Database.insert() with allOrNothing=false and handle partial failures",
+  "Create an Account Hierarchy and understand the ParentId field",
+  "Write a debug log query in Developer Console to trace a specific user's transaction",
+  "Explain and demonstrate Governor Limits with an example",
+  "Create a Global Action to quickly create a Contact from anywhere",
+  "Create a Path on Opportunity to guide reps through Sales Stages",
+  "Write a Trigger that auto-populates Owner field based on Account territory"
+];
+
+const mTasks = [
+  "Build an LWC component with a button that calls an Apex method imperatively",
+  "Create a Custom Label and use it in an Apex class",
+  "Write a Batch Apex class that processes 50,000 Accounts in chunks",
+  "Create a Remote Site Setting and describe when it's used",
+  "Write a Trigger using Trigger context variables: Trigger.new, Trigger.old, Trigger.isInsert",
+  "Create a Custom Object with External ID field for data integration",
+  "Write SOQL with FIELDS(ALL) and explain its governor limit impact",
+  "Build a Flow with Decision element and multiple branches",
+  "Create a Compact Layout for an Object to show key fields in mobile view",
+  "Write an Apex method that returns JSON and explain serialization",
+  "Create a Sharing Rule to extend access to records outside the default model",
+  "Write a SOSL query and compare it with SOQL",
+  "Build a LWC component that uses NavigationMixin to navigate to a record",
+  "Explain and demonstrate the Order of Execution in Salesforce",
+  "Create a Custom Report Type with related objects",
+  "Write a Trigger that creates child records when a parent is inserted",
+  "Describe and set up a Connected App for OAuth authentication",
+  "Write an Apex Future method and explain when to use it",
+  "Use the Schema class to dynamically describe an object in Apex",
+  "Create a Public Group and set up manual sharing rules",
+  "Write a Trigger that prevents Account deletion if it has active Opportunities",
+  "Explain and implement the Singleton pattern in a Trigger Handler",
+  "Build a LWC component that accepts @api properties from parent",
+  "Write a Schedulable Apex class and schedule it via Setup",
+  "Use the Tooling API concept to query ApexClass metadata",
+  "Create a custom exception class in Apex and throw it in a method",
+  "Build a Flow that auto-assigns leads based on criteria",
+  "Write SOQL to get the oldest 5 Opportunities per Account",
+  "Create a Before-Save Flow to replace a Trigger for a simple field update",
+  "Explain data skew and how to avoid it in Salesforce design"
+];
+
+function renderTasks(arr, containerId, probClass, probLabel) {
+  const cont = document.getElementById(containerId);
+  arr.forEach((t, i) => {
+    cont.innerHTML += `<div class="task-item">
+      <div class="task-num">#${i+1}</div>
+      <div class="task-text">${t}</div>
+      <span class="prob-pill ${probClass}">${probLabel}</span>
+    </div>`;
+  });
+}
+renderTasks(vhTasks, 'vhTasks', 'very-high', '🔴 Very High');
+renderTasks(hTasks, 'hTasks', 'high', '🟡 High');
+renderTasks(mTasks, 'mTasks', 'medium', '🔵 Medium');
+
+// ===================== COMPETENCY Q&A =====================
+function renderQA(data, containerId) {
+  const cont = document.getElementById(containerId);
+  data.forEach((item, i) => {
+    cont.innerHTML += `<div class="qa-item">
+      <div class="qa-q" onclick="toggleQA(this)">
+        <span>Q${i+1}. ${item.q}</span>
+        <span class="arrow">▼</span>
+      </div>
+      <div class="qa-a">${item.a}</div>
+    </div>`;
+  });
+}
+
+function toggleQA(el) {
+  el.classList.toggle('open');
+  const ans = el.nextElementSibling;
+  ans.classList.toggle('visible');
+}
+
+const conceptualQs = [
+  {q:"What is a Master-Detail relationship? How is it different from Lookup?", a:`<strong>Master-Detail:</strong> Tight coupling. Child cannot exist without parent. Ownership and security of child are determined by parent. Supports Roll-Up Summary fields. You can have max 2 Master-Detail on a custom object.<br><br><strong>Lookup:</strong> Loose coupling. Child can exist without parent. No Roll-Up Summary possible. More flexible.<br><br><strong>Interview Tip:</strong> Always say "cascade delete" — when you delete a master record, all detail records are deleted automatically in Master-Detail.`},
+  {q:"What are Governor Limits in Salesforce? Name 5 important ones.", a:`Governor Limits prevent any single tenant from monopolizing shared resources.<br><br><ul><li><strong>100 SOQL queries</strong> per synchronous transaction</li><li><strong>150 DML statements</strong> per transaction</li><li><strong>50,000 records</strong> retrieved by SOQL queries</li><li><strong>10,000 DML records</strong> processed</li><li><strong>6MB heap size</strong> (12MB async)</li><li><strong>10 callouts</strong> per transaction</li></ul><br><strong>Key Rule:</strong> Never put SOQL or DML inside a for loop!`},
+  {q:"What is a Trigger? What are Trigger context variables?", a:`A Trigger is Apex code that executes before or after DML events (insert, update, delete, undelete).<br><br><strong>Context Variables:</strong><ul><li><code>Trigger.new</code> — List of new records (insert/update)</li><li><code>Trigger.old</code> — List of old records (update/delete)</li><li><code>Trigger.newMap</code> — Map of Id to new records</li><li><code>Trigger.oldMap</code> — Map of Id to old records</li><li><code>Trigger.isInsert, isUpdate, isDelete, isUndelete</code></li><li><code>Trigger.isBefore, isAfter</code></li><li><code>Trigger.size</code> — Number of records in the trigger</li></ul>`},
+  {q:"What is a Roll-Up Summary Field? What are its limitations?", a:`A Roll-Up Summary field on a Master object aggregates values from related Detail records using COUNT, SUM, MIN, or MAX.<br><br><strong>Limitations:</strong><ul><li>Only available on Master side of Master-Detail relationship</li><li>Cannot be used on Lookup relationships</li><li>Not available on standard objects as master in all cases</li><li>Calculated fields are not recalculated in real-time with every related change in some bulk scenarios</li><li>Max 25 roll-up summary fields per object</li></ul>`},
+  {q:"What is the difference between SOQL and SOSL?", a:`<strong>SOQL (Salesforce Object Query Language):</strong> Used to query a single object and its related objects. Similar to SQL SELECT.<br><code style="color:#10b981">SELECT Id, Name FROM Account WHERE Type = 'Customer'</code><br><br><strong>SOSL (Salesforce Object Search Language):</strong> Used to search across multiple objects at once (text search).<br><code style="color:#10b981">FIND {Accenture} IN ALL FIELDS RETURNING Account(Name), Contact(FirstName)</code><br><br>Use SOQL when you know the object. Use SOSL when searching across objects.`},
+  {q:"What is @AuraEnabled annotation in Apex?", a:`<code>@AuraEnabled</code> exposes an Apex method so it can be called from Lightning Web Components (LWC) or Aura Components.<br><br>Example:<pre>@AuraEnabled(cacheable=true)\npublic static List&lt;Account&gt; getAccounts() {\n    return [SELECT Id, Name FROM Account LIMIT 10];\n}</pre><code>cacheable=true</code> enables client-side caching and is required when using <code>@wire</code> adapter in LWC.`},
+  {q:"What is Test.startTest() and Test.stopTest() used for?", a:`They create a fresh set of governor limits for the code running between them. This ensures your test code doesn't use up limits before the actual tested logic runs.<br><br><code>Test.stopTest()</code> also forces any async operations (like <code>@future</code> methods or Queueable) to complete before assertions are made.<br><br>Best practice: Put the code you're testing between startTest/stopTest and your assertions after stopTest.`},
+  {q:"What is bulkification in Apex?", a:`Bulkification means writing Apex code (especially triggers) that efficiently handles 200+ records at a time instead of just 1.<br><br><strong>Wrong way (causes governor limit errors):</strong><pre>for(Account a : Trigger.new) {\n    Contact c = [SELECT Id FROM Contact WHERE AccountId = :a.Id]; // SOQL in loop!\n}</pre><strong>Right way:</strong><pre>Set&lt;Id&gt; accIds = new Set&lt;Id&gt;();\nfor(Account a : Trigger.new) { accIds.add(a.Id); }\nList&lt;Contact&gt; contacts = [SELECT Id FROM Contact WHERE AccountId IN :accIds];</pre>`},
+  {q:"Explain Salesforce Security Model (OWD, Role Hierarchy, Sharing Rules)", a:`Salesforce security works in layers:<br><br><ul><li><strong>OWD (Org-Wide Defaults):</strong> Baseline access level (Private, Public Read Only, Public Read/Write). Start most restrictive.</li><li><strong>Role Hierarchy:</strong> Users higher in the hierarchy can access records owned by users below them (if OWD permits).</li><li><strong>Sharing Rules:</strong> Extend access beyond OWD to specific groups/roles.</li><li><strong>Manual Sharing:</strong> Record owners can share individual records.</li><li><strong>Profile/Permission Set:</strong> Control what objects/fields a user can access (object-level and field-level security).</li></ul><br>Order: OWD → Role Hierarchy → Sharing Rules → Manual Sharing`},
+  {q:"What is the Order of Execution in Salesforce?", a:`When a record is saved, Salesforce executes in this order:<br><br>1. Load original record from DB<br>2. Override with new values<br>3. Run <strong>System Validation</strong> (required fields, field format)<br>4. Run <strong>Before Triggers</strong><br>5. Run <strong>Custom Validation Rules</strong><br>6. Save record to DB (but not committed)<br>7. Run <strong>After Triggers</strong><br>8. Run <strong>Assignment Rules</strong> (Lead/Case)<br>9. Run <strong>Auto-Response Rules</strong><br>10. Run <strong>Workflow Rules</strong><br>11. Run <strong>Escalation Rules</strong> (Cases)<br>12. Run <strong>Processes/Flows</strong><br>13. <strong>Commit to DB</strong><br>14. Send emails`}
+];
+
+const scenarioQs = [
+  {q:"Scenario: You write a trigger and it works for 1 record but throws a LimitException when 200 records are inserted via Data Loader. What went wrong and how do you fix it?", a:`<strong>Root Cause:</strong> SOQL query or DML statement is inside a for loop, which hits the 100 SOQL / 150 DML limit when 200 records are processed.<br><br><strong>Fix - Move queries outside loops:</strong><pre>// WRONG:\nfor(Contact c : Trigger.new) {\n    Account a = [SELECT Id FROM Account WHERE Id = :c.AccountId];\n}\n\n// CORRECT:\nSet&lt;Id&gt; accIds = new Set&lt;Id&gt;();\nfor(Contact c : Trigger.new) { accIds.add(c.AccountId); }\nMap&lt;Id, Account&gt; accMap = new Map&lt;Id, Account&gt;(\n    [SELECT Id, Name FROM Account WHERE Id IN :accIds]\n);</pre>`},
+  {q:"Scenario: A client needs Opportunities above $10,000 discount to go through manager approval. How would you implement this?", a:`<strong>Solution: Approval Process</strong><br><br>Steps:<ul><li>Go to Setup → Approval Processes → New for Opportunity object</li><li>Entry Criteria: Discount_Percent__c > 20 (or Amount criteria)</li><li>Add Approver: Manager (using 'Manager' lookup from submitter's user record)</li><li>Initial Submission Actions: Lock the record, send email notification</li><li>Approval Actions: Update Stage to 'Approved', unlock record</li><li>Rejection Actions: Update Stage to 'Rejected', send notification</li></ul>Also consider: Can be done via Flow as well in newer orgs.`},
+  {q:"Scenario: You need to auto-create a Task whenever a new Opportunity is created. Should you use a Trigger or a Flow? Why?", a:`<strong>Use Flow (Record-Triggered Flow)</strong> for this scenario.<br><br><strong>Why:</strong><ul><li>Creating a related record from a record event is a declarative use case Flow handles perfectly</li><li>No Apex code required — less maintenance</li><li>Flow can be modified by admins without developer involvement</li><li>Apex is overkill for simple automation that Flow covers</li></ul><br>Use <strong>Trigger + Apex</strong> when:<ul><li>Complex logic (loops, calculations, maps)</li><li>Cross-object updates with business rules</li><li>Handling exceptions / partial success</li><li>Performance-critical bulk operations</li></ul>`},
+  {q:"Scenario: You have a custom object 'Invoice__c' with a Master-Detail to Account. Your client wants to see the total of all Invoice amounts on the Account record. How?", a:`<strong>Solution: Roll-Up Summary Field</strong><br><br>Steps:<ul><li>Go to Account object → Fields & Relationships → New</li><li>Data Type: <strong>Roll-Up Summary</strong></li><li>Summarized Object: Invoice__c</li><li>Roll-Up Type: <strong>SUM</strong></li><li>Field to Aggregate: Amount__c</li><li>Filter (optional): e.g., Status__c = 'Paid'</li></ul><br>This only works because Invoice__c has a <strong>Master-Detail</strong> relationship with Account. If it were a Lookup, you'd need a Trigger to maintain the total.`},
+  {q:"Scenario: The examiner asks: 'Your Test Class passes locally but deployment fails with 73% coverage. What do you do?'", a:`<strong>Debug Steps:</strong><ul><li>Run all tests in the org, not just yours — another class may have reduced overall coverage</li><li>Check if your @TestSetup data is insufficient — test method may not be exercising all code paths</li><li>Check for if/else branches that are not covered — write separate test methods for each branch</li><li>Use Developer Console → Apex Tests → Coverage to see which lines are red (not covered)</li><li>Ensure you're not using SeeAllData=true and relying on existing data</li></ul><br><strong>Remember: 75% is per-org, not per-class. But aim for 90%+ per class.`}
+];
+
+const debugQs = [
+  {q:"Debug: What is wrong with this SOQL query? → List<Account> accs = [SELECT Id, Name, Phone FROM Account, Contact WHERE Account.Type = 'Customer'];", a:`<strong>Error:</strong> You cannot SELECT from multiple objects in a single SOQL query like SQL joins.<br><br><strong>Fix — Use a Subquery for related records:</strong><pre>List&lt;Account&gt; accs = [\n    SELECT Id, Name, Phone,\n    (SELECT Id, FirstName, LastName FROM Contacts)\n    FROM Account\n    WHERE Type = 'Customer'\n];</pre>The inner query (SELECT ... FROM Contacts) is a <strong>subquery</strong> using the relationship name, not the object API name.`},
+  {q:"Debug: This trigger throws a 'Variable does not exist: acc' error. Find the bug.\ntrigger MyTrigger on Account (before insert) {\n  for(Account a : Trigger.new) {\n    acc.Description = 'Test';\n  }\n}", a:`<strong>Bug:</strong> The loop variable is named <code>a</code> but the code references <code>acc</code> which was never declared.<br><br><strong>Fix:</strong><pre>trigger MyTrigger on Account (before insert) {\n  for(Account a : Trigger.new) {\n    a.Description = 'Test'; // Use 'a' not 'acc'\n  }\n}</pre>Also note: In a before trigger, you can directly modify <code>Trigger.new</code> records — no DML needed. Salesforce commits the changes automatically.`},
+  {q:"Debug: Why does this Test Class give 0% coverage?\n@isTest\npublic class TestMyClass {\n  public static void testMethod1() {\n    Account a = new Account(Name='Test');\n    insert a;\n  }\n}", a:`<strong>Two bugs:</strong><br><br>1. Missing <code>@isTest</code> or <code>testMethod</code> annotation on the test method:<pre>@isTest\nstatic void testMethod1() { ... }</pre><br>2. The test only creates an Account but doesn't call the class/trigger being tested. If you're testing MyClass, you need to call MyClass methods inside the test.`},
+  {q:"Debug: This validation rule is supposed to reject if Phone is blank when Type is Customer. But it's not triggering. Why?\nISBLANK(Phone) AND ISPICKVAL(Type, 'Customer - Direct')", a:`<strong>Issue:</strong> The picklist value might be 'Customer' not 'Customer - Direct'. Check the exact picklist value spelling.<br><br><strong>Also:</strong> Validation rules trigger when the formula evaluates to <strong>TRUE</strong>. Make sure:<ul><li>Phone is actually blank (not spaces — use ISBLANK not Phone = null)</li><li>Type picklist value exactly matches, case-sensitive</li><li>The rule is <strong>Active</strong> (checkbox enabled)</li></ul><br><strong>Correct formula:</strong><pre>AND(\n  ISBLANK(Phone),\n  ISPICKVAL(Type, 'Customer')\n)</pre>`}
+];
+
+const codingQs = [
+  {q:"Write an Apex Trigger that sets Contact's Description to 'VIP' if the related Account has AnnualRevenue > 1,000,000", a:`<pre><span class="kw">trigger</span> VIPContactTrigger <span class="kw">on</span> Contact (before insert, before update) {
+    
+    <span class="cm">// Step 1: Collect Account IDs (bulkified!)</span>
+    Set&lt;Id&gt; accountIds = <span class="kw">new</span> Set&lt;Id&gt;();
+    <span class="kw">for</span>(Contact c : Trigger.new) {
+        <span class="kw">if</span>(c.AccountId != <span class="kw">null</span>) {
+            accountIds.add(c.AccountId);
+        }
+    }
+    
+    <span class="cm">// Step 2: Query Accounts (SOQL outside loop)</span>
+    Map&lt;Id, Account&gt; accMap = <span class="kw">new</span> Map&lt;Id, Account&gt;(
+        [SELECT Id, AnnualRevenue FROM Account WHERE Id IN :accountIds]
+    );
+    
+    <span class="cm">// Step 3: Update Contact if Account qualifies</span>
+    <span class="kw">for</span>(Contact c : Trigger.new) {
+        <span class="kw">if</span>(c.AccountId != <span class="kw">null</span> && accMap.containsKey(c.AccountId)) {
+            Account acc = accMap.get(c.AccountId);
+            <span class="kw">if</span>(acc.AnnualRevenue != <span class="kw">null</span> && acc.AnnualRevenue > <span class="num">1000000</span>) {
+                c.Description = <span class="str">'VIP'</span>;
+            }
+        }
+    }
+}</pre><strong>Key Points Examiner Looks For:</strong><ul style="color:var(--muted);font-size:12px;padding-left:18px;margin-top:8px;"><li>SOQL outside the loop ✓</li><li>Using Map for efficient lookups ✓</li><li>Null check on AccountId ✓</li><li>before trigger (no DML needed) ✓</li></ul>`},
+  {q:"Write a Test Class for the above VIP Contact Trigger with at least 80% coverage", a:`<pre><span class="kw">@isTest</span>
+<span class="kw">public class</span> VIPContactTriggerTest {
+    
+    <span class="kw">@TestSetup</span>
+    <span class="kw">static void</span> setupData() {
+        <span class="cm">// Create a VIP Account (revenue > 1M)</span>
+        Account vipAcc = <span class="kw">new</span> Account(
+            Name = <span class="str">'Mega Corp'</span>,
+            AnnualRevenue = <span class="num">5000000</span>
+        );
+        insert vipAcc;
+        
+        <span class="cm">// Create a normal Account</span>
+        Account normalAcc = <span class="kw">new</span> Account(
+            Name = <span class="str">'Small Biz'</span>,
+            AnnualRevenue = <span class="num">50000</span>
+        );
+        insert normalAcc;
+    }
+    
+    <span class="kw">@isTest</span>
+    <span class="kw">static void</span> testVIPContact() {
+        Account vipAcc = [SELECT Id FROM Account WHERE Name = <span class="str">'Mega Corp'</span>];
+        Contact c = <span class="kw">new</span> Contact(
+            LastName = <span class="str">'Smith'</span>,
+            AccountId = vipAcc.Id
+        );
+        
+        Test.startTest();
+        insert c;
+        Test.stopTest();
+        
+        Contact result = [SELECT Description FROM Contact WHERE Id = :c.Id];
+        System.assertEquals(<span class="str">'VIP'</span>, result.Description, <span class="str">'Contact should be VIP'</span>);
+    }
+    
+    <span class="kw">@isTest</span>
+    <span class="kw">static void</span> testNonVIPContact() {
+        Account normalAcc = [SELECT Id FROM Account WHERE Name = <span class="str">'Small Biz'</span>];
+        Contact c = <span class="kw">new</span> Contact(
+            LastName = <span class="str">'Jones'</span>,
+            AccountId = normalAcc.Id
+        );
+        
+        Test.startTest();
+        insert c;
+        Test.stopTest();
+        
+        Contact result = [SELECT Description FROM Contact WHERE Id = :c.Id];
+        System.assertNotEquals(<span class="str">'VIP'</span>, result.Description, <span class="str">'Should not be VIP'</span>);
+    }
+}</pre>`},
+  {q:"Write a SOQL query to get the Top 3 Opportunities by Amount for each Account (using LIMIT in a subquery)", a:`<pre><span class="cm">// Approach 1: Subquery on Account (max 200 related records)</span>
+List&lt;Account&gt; accounts = [
+    SELECT Id, Name,
+    (SELECT Id, Name, Amount FROM Opportunities 
+     ORDER BY Amount DESC LIMIT 3)
+    FROM Account
+    WHERE Id IN (SELECT AccountId FROM Opportunity)
+];
+
+<span class="cm">// Approach 2: Direct Opportunity query</span>
+List&lt;AggregateResult&gt; topOpps = [
+    SELECT AccountId, MAX(Amount) maxAmount, COUNT(Id) oppCount
+    FROM Opportunity
+    WHERE Amount != null
+    GROUP BY AccountId
+    ORDER BY MAX(Amount) DESC
+    LIMIT 10
+];
+
+<span class="cm">// Approach 3: Simple per-account query</span>
+List&lt;Opportunity&gt; opps = [
+    SELECT Id, Name, Amount, Account.Name
+    FROM Opportunity
+    WHERE AccountId = :someAccountId
+    ORDER BY Amount DESC
+    LIMIT 3
+];</pre>`}
+];
+
+renderQA(conceptualQs, 'conceptualQA');
+renderQA(scenarioQs, 'scenarioQA');
+renderQA(debugQs, 'debugQA');
+renderQA(codingQs, 'codingQA');
+
+// ===================== MCQs =====================
+const mcqs = [
+  {q:"Which field type supports Roll-Up Summary?", opts:["Lookup Relationship","Master-Detail Relationship","External Lookup","Hierarchical Relationship"], ans:1, explain:"Roll-Up Summary fields are only available on the Master side of a Master-Detail relationship."},
+  {q:"What is the maximum number of SOQL queries allowed per synchronous Apex transaction?", opts:["50","100","200","500"], ans:1, explain:"100 SOQL queries per synchronous transaction. 200 in async (Batch, Future, Queueable)."},
+  {q:"Which annotation is required to expose an Apex method to LWC?", opts:["@LwcEnabled","@RemoteAction","@AuraEnabled","@InvocableMethod"], ans:2, explain:"@AuraEnabled exposes methods to LWC and Aura components. Use @AuraEnabled(cacheable=true) for @wire adapter."},
+  {q:"When does a 'before insert' trigger fire?", opts:["After the record is committed to the database","After system validation but before the record is saved","After workflow rules run","Before system validation"], ans:1, explain:"Before triggers fire after system validation (required fields, format) but BEFORE the record is saved to DB. You can modify Trigger.new without DML."},
+  {q:"A child record in a Master-Detail relationship is deleted when its parent is deleted. This is called:", opts:["Cascade Update","Cascade Delete","Referential Integrity","Record Locking"], ans:1, explain:"Cascade Delete is a feature of Master-Detail. All child records are deleted when the master record is deleted."},
+  {q:"What method do you call to force asynchronous Apex (@future) to complete in a Test class?", opts:["Test.run()","Test.stopTest()","Database.commitWork()","System.flush()"], ans:1, explain:"Test.stopTest() forces all async operations (@future, Queueable) to complete synchronously so you can make assertions."},
+  {q:"Which SOQL clause is used to filter using a list of values?", opts:["= :listVar","IN :listVar","LIKE :listVar","CONTAINS :listVar"], ans:1, explain:"Use 'IN :listVar' to filter against a List or Set. Example: WHERE Id IN :setOfIds"},
+  {q:"How many Master-Detail relationships can a custom object have?", opts:["1","2","3","Unlimited"], ans:1, explain:"A custom object can have a maximum of 2 Master-Detail relationships."},
+  {q:"Which Trigger context variable contains a Map of record IDs to old values?", opts:["Trigger.old","Trigger.oldMap","Trigger.newMap","Trigger.oldList"], ans:1, explain:"Trigger.oldMap is a Map<Id, SObject> of old record values. Available in update and delete triggers."},
+  {q:"What test coverage percentage is required to deploy to production?", opts:["50%","60%","75%","90%"], ans:2, explain:"75% minimum overall code coverage is required to deploy Apex to production. Aim for 90%+ per class in practice."}
+];
+
+const mcqCont = document.getElementById('mcqContainer');
+mcqs.forEach((m, i) => {
+  let optsHtml = m.opts.map((o, oi) => `<div class="mcq-opt" onclick="answerMCQ(this, ${i}, ${oi})">${String.fromCharCode(65+oi)}. ${o}</div>`).join('');
+  mcqCont.innerHTML += `<div class="mcq-item">
+    <div class="mcq-q">Q${i+1}. ${m.q}</div>
+    ${optsHtml}
+    <div class="mcq-explain" id="explain-${i}">💡 ${m.explain}</div>
+  </div>`;
+});
+
+function answerMCQ(el, qi, oi) {
+  const item = el.closest('.mcq-item');
+  const opts = item.querySelectorAll('.mcq-opt');
+  opts.forEach(o => o.style.pointerEvents = 'none');
+  if(oi === mcqs[qi].ans) {
+    el.classList.add('correct');
+    el.textContent = '✅ ' + el.textContent;
+  } else {
+    el.classList.add('wrong');
+    opts[mcqs[qi].ans].classList.add('correct');
+  }
+  document.getElementById(`explain-${qi}`).style.display = 'block';
+}
+
+// ===================== LABS =====================
+function renderLab(containerId, title, steps) {
+  const cont = document.getElementById(containerId);
+  cont.innerHTML += `<div class="card"><h2>🧪 ${title}</h2><div>${steps.map((s,i) => `
+    <div class="lab-step">
+      <div class="step-icon">${i+1}</div>
+      <div class="step-body">
+        <div class="step-title">${s.title}</div>
+        <div class="step-desc">${s.desc}</div>
+      </div>
+    </div>`).join('')}</div></div>`;
+}
+
+renderLab('adminLabs', 'Lab 1: Custom Object — Student Management System', [
+  {title:"Navigate to Object Manager", desc:"Setup → Object Manager → Create → Custom Object"},
+  {title:"Create 'Student__c' Object", desc:"Label: Student | Plural: Students | Enable Reports, Activities, History Tracking"},
+  {title:"Add Roll Number field", desc:"New Field → Data Type: Text | Field Name: Roll_Number__c | Required: ✓ | Unique: ✓"},
+  {title:"Add Marks field", desc:"New Field → Data Type: Number | Length: 3 | Decimal: 0 | Min:0 Max:100"},
+  {title:"Add Grade Formula Field", desc:"Data Type: Formula (Text) | Formula: IF(Marks__c >= 90, 'A', IF(Marks__c >= 70, 'B', IF(Marks__c >= 50, 'C', 'F')))"},
+  {title:"Create Validation Rule", desc:"Rule Name: Marks_Range | Error Condition: OR(Marks__c < 0, Marks__c > 100) | Error Message: 'Marks must be between 0 and 100'"},
+  {title:"Add Custom Tab", desc:"Setup → Tabs → New → Object: Student__c → Choose Tab Style → Add to App"},
+  {title:"Create a Record and Test", desc:"Go to Student tab → New → Enter Name, Roll Number=101, Marks=85 → Save → Verify Grade = 'B'"}
+]);
+
+renderLab('adminLabs', 'Lab 2: Master-Detail Relationship — Order Line Items', [
+  {title:"Create Order__c object", desc:"Setup → Object Manager → Create → Custom Object: 'Order', plural 'Orders'"},
+  {title:"Create OrderLineItem__c object", desc:"Create another custom object: 'Order Line Item', plural 'Order Line Items'"},
+  {title:"Add Master-Detail field on OrderLineItem__c", desc:"New Field → Data Type: Master-Detail Relationship | Related To: Order__c | Child Relationship Name: Order_Line_Items"},
+  {title:"Add Unit Price and Quantity fields", desc:"Unit_Price__c (Currency) and Quantity__c (Number) on OrderLineItem__c"},
+  {title:"Add Line Total formula", desc:"Formula (Currency): Unit_Price__c * Quantity__c"},
+  {title:"Add Roll-Up Summary on Order", desc:"On Order__c → New Field → Roll-Up Summary → Summarized Object: OrderLineItems | SUM of Line_Total__c → Name: Total_Amount__c"},
+  {title:"Test by creating Order and Line Items", desc:"Create an Order. Add 3 Line Items with different prices. Verify Total_Amount__c on Order auto-calculates."}
+]);
+
+renderLab('adminLabs', 'Lab 3: Reports and Dashboards', [
+  {title:"Create a Matrix Report", desc:"Reports tab → New Report → Report Type: Opportunities | Format: Matrix | Group Rows by: Stage | Group Columns by: Close Date (Month)"},
+  {title:"Add Summary Fields", desc:"Summarize by: Amount (Sum, Avg) and Probability (Avg)"},
+  {title:"Add Filter", desc:"Add filter: Close Date = This Year"},
+  {title:"Save and Run", desc:"Save as 'Opportunities Matrix by Stage and Month' in a folder"},
+  {title:"Create Dashboard", desc:"Dashboards tab → New Dashboard → Add Component → Source Report: above report"},
+  {title:"Choose Chart Type", desc:"Select Bar Chart or Donut | X-Axis: Stage | Y-Axis: Sum of Amount"},
+  {title:"Refresh and Share", desc:"Save Dashboard as 'Sales Performance'. Click Refresh. Share with role."}
+]);
+
+const soqlLabContent = `<div class="card">
+<h2>🧪 SOQL Lab — Essential Queries</h2>
+
+<div class="step-title" style="color:var(--accent);margin:12px 0 4px;">1. Basic SELECT with WHERE</div>
+<pre>SELECT Id, Name, Phone, Industry 
+FROM Account 
+WHERE Industry = 'Technology' AND AnnualRevenue > 100000
+ORDER BY Name ASC
+LIMIT 20</pre>
+
+<div class="step-title" style="color:var(--accent);margin:12px 0 4px;">2. Query with Subquery (Parent-Child)</div>
+<pre>SELECT Id, Name, 
+    (SELECT Id, FirstName, LastName, Email FROM Contacts),
+    (SELECT Id, Name, Amount FROM Opportunities WHERE Amount > 10000)
+FROM Account
+WHERE Type = 'Customer'</pre>
+
+<div class="step-title" style="color:var(--accent);margin:12px 0 4px;">3. Child-to-Parent Traversal</div>
+<pre>SELECT Id, FirstName, LastName, 
+       Account.Name, Account.Phone, Account.Industry
+FROM Contact
+WHERE Account.Industry = 'Technology'</pre>
+
+<div class="step-title" style="color:var(--accent);margin:12px 0 4px;">4. Aggregate Functions</div>
+<pre>SELECT StageName, 
+       COUNT(Id) oppCount, 
+       SUM(Amount) totalAmount,
+       AVG(Amount) avgAmount,
+       MAX(CloseDate) latestClose
+FROM Opportunity
+WHERE CloseDate = THIS_YEAR
+GROUP BY StageName
+ORDER BY SUM(Amount) DESC</pre>
+
+<div class="step-title" style="color:var(--accent);margin:12px 0 4px;">5. Using a Bind Variable in Apex</div>
+<pre>String industry = 'Technology';
+Decimal minRevenue = 500000;
+List&lt;Account&gt; accounts = [
+    SELECT Id, Name, AnnualRevenue
+    FROM Account
+    WHERE Industry = :industry
+    AND AnnualRevenue > :minRevenue
+];</pre>
+
+<div class="step-title" style="color:var(--accent);margin:12px 0 4px;">6. SOQL IN a Set</div>
+<pre>Set&lt;String&gt; industries = new Set&lt;String&gt;{'Technology', 'Finance', 'Healthcare'};
+List&lt;Account&gt; accounts = [
+    SELECT Id, Name FROM Account
+    WHERE Industry IN :industries
+];</pre>
+
+<div class="step-title" style="color:var(--accent);margin:12px 0 4px;">7. Date Literals</div>
+<pre>// Records created in the last 30 days
+SELECT Id, Name FROM Lead WHERE CreatedDate = LAST_N_DAYS:30
+
+// Opportunities closing this quarter
+SELECT Id, Name, Amount FROM Opportunity 
+WHERE CloseDate = THIS_QUARTER AND StageName != 'Closed Lost'</pre>
+
+<div class="step-title" style="color:var(--accent);margin:12px 0 4px;">8. HAVING clause (filter aggregate results)</div>
+<pre>SELECT AccountId, COUNT(Id) oppCount
+FROM Opportunity
+GROUP BY AccountId
+HAVING COUNT(Id) > 5</pre>
+</div>`;
+document.getElementById('soqlLabs').innerHTML = soqlLabContent;
+
+const apexLabContent = `<div class="card">
+<h2>🧪 Apex Class Lab — Core Patterns</h2>
+<div class="step-title" style="color:var(--accent);margin:12px 0 4px;">Lab 1: Apex Class with @AuraEnabled for LWC</div>
+<pre><span class="kw">public with sharing class</span> AccountHelper {
+    
+    <span class="cm">// Query accounts — callable from LWC via @wire</span>
+    <span class="kw">@AuraEnabled</span>(cacheable=<span class="kw">true</span>)
+    <span class="kw">public static</span> List&lt;Account&gt; getAccountsByIndustry(String industry) {
+        <span class="kw">return</span> [
+            SELECT Id, Name, Phone, Industry, AnnualRevenue
+            FROM Account
+            WHERE Industry = :industry
+            ORDER BY Name
+            LIMIT <span class="num">50</span>
+        ];
+    }
+    
+    <span class="cm">// Update account description — called imperatively</span>
+    <span class="kw">@AuraEnabled</span>
+    <span class="kw">public static void</span> updateDescription(Id accountId, String description) {
+        <span class="kw">try</span> {
+            Account acc = [SELECT Id FROM Account WHERE Id = :accountId];
+            acc.Description = description;
+            update acc;
+        } <span class="kw">catch</span>(Exception e) {
+            <span class="kw">throw new</span> AuraHandledException(e.getMessage());
+        }
+    }
+}</pre>
+
+<div class="step-title" style="color:var(--accent);margin:12px 0 4px;">Lab 2: Apex with Database.insert (Partial Success)</div>
+<pre><span class="kw">public class</span> BulkInsertHelper {
+    <span class="kw">public static void</span> insertContactsSafely(List&lt;Contact&gt; contacts) {
+        List&lt;Database.SaveResult&gt; results = Database.insert(contacts, <span class="kw">false</span>); <span class="cm">// allOrNothing=false</span>
+        
+        <span class="kw">for</span>(Integer i = 0; i &lt; results.size(); i++) {
+            <span class="kw">if</span>(results[i].isSuccess()) {
+                System.debug(<span class="str">'Inserted: '</span> + results[i].getId());
+            } <span class="kw">else</span> {
+                <span class="kw">for</span>(Database.Error err : results[i].getErrors()) {
+                    System.debug(<span class="str">'Error on record '</span> + i + <span class="str">': '</span> + err.getMessage());
+                }
+            }
+        }
+    }
+}</pre>
+
+<div class="step-title" style="color:var(--accent);margin:12px 0 4px;">Lab 3: InvocableMethod (callable from Flow)</div>
+<pre><span class="kw">public class</span> LeadConverter {
+    
+    <span class="kw">@InvocableMethod</span>(label=<span class="str">'Convert Lead'</span> description=<span class="str">'Converts a lead to Account/Contact'</span>)
+    <span class="kw">public static</span> List&lt;String&gt; convertLeads(List&lt;Id&gt; leadIds) {
+        List&lt;String&gt; results = <span class="kw">new</span> List&lt;String&gt;();
+        <span class="kw">for</span>(Id leadId : leadIds) {
+            Database.LeadConvert lc = <span class="kw">new</span> Database.LeadConvert();
+            lc.setLeadId(leadId);
+            lc.setConvertedStatus(<span class="str">'Qualified'</span>);
+            Database.LeadConvertResult lcr = Database.convertLead(lc);
+            results.add(lcr.isSuccess() ? <span class="str">'Success: '</span> + lcr.getAccountId() : <span class="str">'Failed'</span>);
+        }
+        <span class="kw">return</span> results;
+    }
+}</pre>
+</div>`;
+document.getElementById('apexLabs').innerHTML = apexLabContent;
+
+const triggerLabContent = `<div class="card">
+<h2>🧪 Trigger Lab — Handler Pattern (Industry Standard)</h2>
+<pre><span class="cm">// Step 1: Thin Trigger (OpportunityTrigger.trigger)</span>
+<span class="kw">trigger</span> OpportunityTrigger <span class="kw">on</span> Opportunity (
+    before insert, before update, before delete,
+    after insert, after update, after delete, after undelete
+) {
+    OpportunityTriggerHandler handler = <span class="kw">new</span> OpportunityTriggerHandler();
+    
+    <span class="kw">if</span>(Trigger.isBefore) {
+        <span class="kw">if</span>(Trigger.isInsert) handler.beforeInsert(Trigger.new);
+        <span class="kw">if</span>(Trigger.isUpdate) handler.beforeUpdate(Trigger.new, Trigger.oldMap);
+    }
+    <span class="kw">if</span>(Trigger.isAfter) {
+        <span class="kw">if</span>(Trigger.isInsert) handler.afterInsert(Trigger.new);
+        <span class="kw">if</span>(Trigger.isUpdate) handler.afterUpdate(Trigger.new, Trigger.oldMap);
+    }
+}</pre>
+
+<pre><span class="cm">// Step 2: Handler Class (OpportunityTriggerHandler.cls)</span>
+<span class="kw">public class</span> OpportunityTriggerHandler {
+    
+    <span class="kw">public void</span> beforeInsert(List&lt;Opportunity&gt; newOpps) {
+        <span class="kw">for</span>(Opportunity opp : newOpps) {
+            <span class="cm">// Set default close date if blank</span>
+            <span class="kw">if</span>(opp.CloseDate == <span class="kw">null</span>) {
+                opp.CloseDate = Date.today().addDays(<span class="num">30</span>);
+            }
+        }
+    }
+    
+    <span class="kw">public void</span> beforeUpdate(List&lt;Opportunity&gt; newOpps, Map&lt;Id, Opportunity&gt; oldMap) {
+        <span class="kw">for</span>(Opportunity opp : newOpps) {
+            Opportunity oldOpp = oldMap.get(opp.Id);
+            <span class="cm">// Prevent stage reverting from Closed Won</span>
+            <span class="kw">if</span>(oldOpp.StageName == <span class="str">'Closed Won'</span> && opp.StageName != <span class="str">'Closed Won'</span>) {
+                opp.addError(<span class="str">'Cannot change stage from Closed Won!'</span>);
+            }
+        }
+    }
+    
+    <span class="kw">public void</span> afterInsert(List&lt;Opportunity&gt; newOpps) {
+        <span class="cm">// Create a follow-up task for each new Opportunity</span>
+        List&lt;Task&gt; tasks = <span class="kw">new</span> List&lt;Task&gt;();
+        <span class="kw">for</span>(Opportunity opp : newOpps) {
+            tasks.add(<span class="kw">new</span> Task(
+                Subject = <span class="str">'Follow up on '</span> + opp.Name,
+                WhatId = opp.Id,
+                ActivityDate = Date.today().addDays(<span class="num">3</span>),
+                Status = <span class="str">'Not Started'</span>
+            ));
+        }
+        <span class="kw">if</span>(!tasks.isEmpty()) insert tasks; <span class="cm">// DML in after trigger only</span>
+    }
+    
+    <span class="kw">public void</span> afterUpdate(List&lt;Opportunity&gt; newOpps, Map&lt;Id, Opportunity&gt; oldMap) {
+        <span class="cm">// Additional logic for updates</span>
+    }
+}</pre>
+<div class="tip-box"><strong>🎯 Examiner Tip:</strong> Always use the Handler Pattern. Never write business logic directly in the trigger file. This is the industry standard Accenture follows.</div>
+</div>`;
+document.getElementById('triggerLabs').innerHTML = triggerLabContent;
+
+const testLabContent = `<div class="card">
+<h2>🧪 Test Class Lab — Complete Template</h2>
+<pre><span class="kw">@isTest</span>
+<span class="kw">public class</span> OpportunityTriggerTest {
+    
+    <span class="cm">// @TestSetup runs once before all test methods</span>
+    <span class="kw">@TestSetup</span>
+    <span class="kw">static void</span> setupTestData() {
+        Account acc = <span class="kw">new</span> Account(
+            Name = <span class="str">'Test Account'</span>,
+            Industry = <span class="str">'Technology'</span>
+        );
+        insert acc;
+    }
+    
+    <span class="cm">// Test: Default close date is set</span>
+    <span class="kw">@isTest</span>
+    <span class="kw">static void</span> testDefaultCloseDate() {
+        Account acc = [SELECT Id FROM Account WHERE Name = <span class="str">'Test Account'</span>];
+        
+        Opportunity opp = <span class="kw">new</span> Opportunity(
+            Name = <span class="str">'Test Opp'</span>,
+            AccountId = acc.Id,
+            StageName = <span class="str">'Prospecting'</span>
+            <span class="cm">// Intentionally omitting CloseDate</span>
+        );
+        
+        Test.startTest();
+        insert opp;
+        Test.stopTest();
+        
+        Opportunity result = [SELECT CloseDate FROM Opportunity WHERE Id = :opp.Id];
+        System.assertEquals(Date.today().addDays(<span class="num">30</span>), result.CloseDate, 
+            <span class="str">'CloseDate should be set to today + 30'</span>);
+    }
+    
+    <span class="cm">// Test: Error when changing stage from Closed Won</span>
+    <span class="kw">@isTest</span>
+    <span class="kw">static void</span> testPreventStageChange() {
+        Account acc = [SELECT Id FROM Account WHERE Name = <span class="str">'Test Account'</span>];
+        
+        Opportunity opp = <span class="kw">new</span> Opportunity(
+            Name = <span class="str">'Closed Opp'</span>,
+            AccountId = acc.Id,
+            StageName = <span class="str">'Closed Won'</span>,
+            CloseDate = Date.today(),
+            Amount = <span class="num">50000</span>
+        );
+        insert opp;
+        
+        opp.StageName = <span class="str">'Prospecting'</span>; <span class="cm">// Try to revert</span>
+        
+        Test.startTest();
+        <span class="kw">try</span> {
+            update opp;
+            System.assert(<span class="kw">false</span>, <span class="str">'Should have thrown error'</span>);
+        } <span class="kw">catch</span>(DmlException e) {
+            System.assert(e.getMessage().contains(<span class="str">'Closed Won'</span>), 
+                <span class="str">'Error message should mention Closed Won'</span>);
+        }
+        Test.stopTest();
+    }
+    
+    <span class="cm">// Test: Task created after Opportunity insert</span>
+    <span class="kw">@isTest</span>
+    <span class="kw">static void</span> testTaskCreation() {
+        Account acc = [SELECT Id FROM Account WHERE Name = <span class="str">'Test Account'</span>];
+        
+        Opportunity opp = <span class="kw">new</span> Opportunity(
+            Name = <span class="str">'Task Test Opp'</span>,
+            AccountId = acc.Id,
+            StageName = <span class="str">'Prospecting'</span>,
+            CloseDate = Date.today().addDays(<span class="num">30</span>)
+        );
+        
+        Test.startTest();
+        insert opp;
+        Test.stopTest();
+        
+        List&lt;Task&gt; tasks = [SELECT Subject FROM Task WHERE WhatId = :opp.Id];
+        System.assertEquals(<span class="num">1</span>, tasks.size(), <span class="str">'One task should be created'</span>);
+        System.assert(tasks[<span class="num">0</span>].Subject.contains(opp.Name));
+    }
+}</pre>
+</div>`;
+document.getElementById('testLabs').innerHTML = testLabContent;
+
+const lwcLabContent = `<div class="card">
+<h2>🧪 LWC Lab — Account List Component</h2>
+<pre><span class="cm">// accountList.js</span>
+<span class="kw">import</span> { LightningElement, wire, track } <span class="kw">from</span> <span class="str">'lwc'</span>;
+<span class="kw">import</span> getAccountsByIndustry <span class="kw">from</span> <span class="str">'@salesforce/apex/AccountHelper.getAccountsByIndustry'</span>;
+
+<span class="kw">export default class</span> AccountList <span class="kw">extends</span> LightningElement {
+    
+    <span class="kw">@track</span> selectedIndustry = <span class="str">'Technology'</span>;
+    
+    <span class="cm">// @wire auto-calls Apex when selectedIndustry changes</span>
+    <span class="kw">@wire</span>(getAccountsByIndustry, { industry: <span class="str">'$selectedIndustry'</span> })
+    accounts;
+    
+    get hasAccounts() {
+        <span class="kw">return</span> <span class="kw">this</span>.accounts.data && <span class="kw">this</span>.accounts.data.length > <span class="num">0</span>;
+    }
+    
+    handleIndustryChange(event) {
+        <span class="kw">this</span>.selectedIndustry = event.target.value;
+    }
+}</pre>
+
+<pre><span class="cm">&lt;!-- accountList.html --&gt;</span>
+&lt;template&gt;
+    &lt;lightning-card title="Account List" icon-name="standard:account"&gt;
+        &lt;div class="slds-p-around_medium"&gt;
+            
+            &lt;lightning-input 
+                label="Industry"
+                value={selectedIndustry}
+                onchange={handleIndustryChange}&gt;
+            &lt;/lightning-input&gt;
+            
+            &lt;template if:true={hasAccounts}&gt;
+                &lt;lightning-datatable
+                    key-field="Id"
+                    data={accounts.data}
+                    columns={columns}&gt;
+                &lt;/lightning-datatable&gt;
+            &lt;/template&gt;
+            
+            &lt;template if:true={accounts.error}&gt;
+                &lt;p style="color:red"&gt;Error loading accounts!&lt;/p&gt;
+            &lt;/template&gt;
+            
+        &lt;/div&gt;
+    &lt;/lightning-card&gt;
+&lt;/template&gt;</pre>
+
+<pre><span class="cm"># accountList.js-meta.xml</span>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata"&gt;
+    &lt;apiVersion&gt;59.0&lt;/apiVersion&gt;
+    &lt;isExposed&gt;true&lt;/isExposed&gt;
+    &lt;targets&gt;
+        &lt;target&gt;lightning__AppPage&lt;/target&gt;
+        &lt;target&gt;lightning__RecordPage&lt;/target&gt;
+        &lt;target&gt;lightning__HomePage&lt;/target&gt;
+    &lt;/targets&gt;
+&lt;/LightningComponentBundle&gt;</pre>
+<div class="tip-box"><strong>🎯 Key LWC Concepts:</strong> @wire = reactive (auto-calls), @api = public property (parent → child), @track = reactive private, $propertyName = reactive in @wire params</div>
+</div>`;
+document.getElementById('lwcLabs').innerHTML = lwcLabContent;
+
+const flowLabContent = `<div class="card">
+<h2>🧪 Flow Builder Lab — Record-Triggered Flow</h2>
+${[
+  {title:"Go to Flow Builder", desc:"Setup → Flows → New Flow → Record-Triggered Flow"},
+  {title:"Configure Trigger", desc:"Object: Opportunity | Trigger: A record is created or updated | When to Run: When record is created or updated"},
+  {title:"Set Entry Conditions", desc:"Condition: StageName Equals 'Closed Won' | Run only when: condition is met and changed"},
+  {title:"Add Get Records Element", desc:"Find the Account related to this Opportunity: Get Records → Account → Filter: Id = {!$Record.AccountId}"},
+  {title:"Add Send Email Action", desc:"Add Action → Send Email | To: {!Get_Account.OwnerId} | Subject: 'Closed Won: {!$Record.Name}' | Body: 'Congrats! Opp closed for {!$Record.Amount}'"},
+  {title:"Add Update Records Element", desc:"Update the Opportunity: Set a field → Notification_Sent__c = True (custom checkbox field)"},
+  {title:"Save and Activate", desc:"Save As: 'Closed Won Notification Flow' | Click Activate. Test by updating an Opportunity to Closed Won."}
+].map((s,i) => `<div class="lab-step"><div class="step-icon">${i+1}</div><div class="step-body"><div class="step-title">${s.title}</div><div class="step-desc">${s.desc}</div></div></div>`).join('')}
+</div>`;
+document.getElementById('flowLabs').innerHTML = flowLabContent;
+
+// ===================== SIMULATOR =====================
+const simTasks = [
+  {
+    num: 1,
+    title: "Create a Student Management Object",
+    task: "Create a Custom Object called 'Student__c' with the following:\n• Name field (standard)\n• Roll_Number__c (Text, Unique, Required)\n• Marks__c (Number, 0 decimal)\n• Grade__c (Formula - Text): Returns A/B/C/F based on marks",
+    hint: "Grade formula: IF(Marks__c >= 90, 'A', IF(Marks__c >= 70, 'B', IF(Marks__c >= 50, 'C', 'F')))",
+    solution: "1. Setup → Object Manager → Create → Custom Object\n2. Label: Student, Plural: Students\n3. Add Roll_Number__c: Text(10), Unique=✓, Required=✓\n4. Add Marks__c: Number(3,0)\n5. Add Grade__c: Formula(Text) = IF(Marks__c>=90,'A',IF(Marks__c>=70,'B',IF(Marks__c>=50,'C','F')))\n6. Create Tab, add to App",
+    tips: "• Formula fields are calculated — never stored directly\n• Always check 'Unique' for ID/Roll number fields\n• Test with marks=85 → expect 'B'; marks=45 → expect 'F'"
+  },
+  {
+    num: 2,
+    title: "Write a Bulkified Apex Trigger",
+    task: "Write an Apex Trigger on the Contact object:\n• When Contacts are inserted, automatically set their Description field to 'New Contact Added on [today's date]'\n• MUST be bulkified (handle 200+ records)\n• Use before insert",
+    hint: "Date.today().format() gives you today's date as a string",
+    solution: "trigger ContactDescriptionTrigger on Contact (before insert) {\n  String today = String.valueOf(Date.today());\n  for(Contact c : Trigger.new) {\n    c.Description = 'New Contact Added on ' + today;\n  }\n}\n// Note: No SOQL/DML needed here — it's a simple field population in before trigger",
+    tips: "• Before trigger → modify Trigger.new directly, no DML needed\n• Looping over Trigger.new IS correct here (no SOQL/DML in loop = fine)\n• Date.today() returns a Date; convert to String for concatenation"
+  },
+  {
+    num: 3,
+    title: "Write SOQL in Developer Console",
+    task: "Write a SOQL query in Developer Console that:\n• Fetches Accounts in 'Technology' or 'Finance' industry\n• With AnnualRevenue > 500000\n• Shows Name, Industry, AnnualRevenue, Phone\n• Ordered by AnnualRevenue descending\n• Limited to 10 records",
+    hint: "Use IN operator for multiple industry values. Use a Set or just list them inline.",
+    solution: "SELECT Id, Name, Industry, AnnualRevenue, Phone\nFROM Account\nWHERE Industry IN ('Technology', 'Finance')\nAND AnnualRevenue > 500000\nORDER BY AnnualRevenue DESC\nLIMIT 10",
+    tips: "• IN can take a parenthesized list of values directly in SOQL (unlike Apex where you need a List/Set variable)\n• Always include Id in SOQL even if you don't display it\n• Examiner may ask you to extend this with a GROUP BY — know aggregate functions"
+  },
+  {
+    num: 4,
+    title: "Validation Rule — Email Format",
+    task: "Create a Validation Rule on Contact object:\n• Field: Email\n• Rule: Email must contain '@' and '.' and must not be blank when Lead Source is 'Web'\n• Error message should say: 'A valid email is required for Web leads'",
+    hint: "Use ISPICKVAL(), ISBLANK(), NOT(), CONTAINS()",
+    solution: "AND(\n  ISPICKVAL(LeadSource, 'Web'),\n  OR(\n    ISBLANK(Email),\n    NOT(CONTAINS(Email, '@')),\n    NOT(CONTAINS(Email, '.'))\n  )\n)\n\nError Message: 'A valid email is required for Web leads'\nError Location: Top of Page or Email field",
+    tips: "• Validation rules must return TRUE to show error\n• ISPICKVAL is for picklist fields — don't use = operator on picklists\n• ISBLANK checks null AND empty string — better than = null\n• Test with blank email + Lead Source = Web → should error. With valid email → should save."
+  },
+  {
+    num: 5,
+    title: "Write a Test Class",
+    task: "Write a complete test class for this Apex class:\npublic class MathHelper {\n  public static Integer add(Integer a, Integer b) { return a + b; }\n  public static Integer multiply(Integer a, Integer b) { return a * b; }\n  public static Integer divide(Integer a, Integer b) {\n    if(b == 0) throw new AuraHandledException('Cannot divide by zero');\n    return a / b;\n  }\n}\nRequirements: Cover all methods, test the exception, use System.assertEquals",
+    hint: "Write 3-4 test methods. Use try-catch for exception testing.",
+    solution: "@isTest\npublic class MathHelperTest {\n  @isTest static void testAdd() {\n    System.assertEquals(7, MathHelper.add(3, 4));\n    System.assertEquals(0, MathHelper.add(-5, 5));\n  }\n  @isTest static void testMultiply() {\n    System.assertEquals(12, MathHelper.multiply(3, 4));\n    System.assertEquals(0, MathHelper.multiply(0, 100));\n  }\n  @isTest static void testDivide() {\n    System.assertEquals(5, MathHelper.divide(10, 2));\n  }\n  @isTest static void testDivideByZero() {\n    try {\n      MathHelper.divide(10, 0);\n      System.assert(false, 'Should have thrown exception');\n    } catch(Exception e) {\n      System.assert(e.getMessage().contains('zero'));\n    }\n  }\n}",
+    tips: "• Test both happy path AND error path\n• System.assert(false, msg) is a trick to fail the test if an exception wasn't thrown\n• The try-catch test pattern is very commonly asked"
+  }
+];
+
+let currentSim = 0;
+let simRevealed = false;
+
+function renderSimulator() {
+  const cont = document.getElementById('simContainer');
+  const task = simTasks[currentSim];
+  cont.innerHTML = `
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+      <div style="color:var(--muted);font-size:13px;">Task ${currentSim+1} of ${simTasks.length}</div>
+      <div style="flex:1;height:4px;background:var(--surface2);border-radius:2px;">
+        <div style="height:4px;background:var(--accent);border-radius:2px;width:${((currentSim+1)/simTasks.length)*100}%"></div>
+      </div>
+    </div>
+    <div class="sim-card">
+      <div class="sim-label">📋 Task ${task.num} — Accenture SFDC Assessor</div>
+      <div class="sim-task">${task.title}</div>
+      <div class="sim-desc">${task.task.replace(/\n/g,'<br>')}</div>
+      <div class="tip-box">💡 <strong>Hint:</strong> ${task.hint}</div>
+      <div style="margin-top:16px">
+        <div style="font-size:12px;color:var(--muted);margin-bottom:6px;">Your answer / approach:</div>
+        <textarea class="answer-box" id="userAnswer" placeholder="Describe your steps or paste your code here..."></textarea>
+      </div>
+      <button class="btn" onclick="revealSolution()">✅ Submit & See Evaluation</button>
+    </div>
+    <div class="score-box" id="scoreBox">
+      <div style="display:flex;gap:20px;align-items:center;margin-bottom:14px;">
+        <div><div class="score-num">9/10</div><div class="score-tag">Score</div></div>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:700;color:var(--accent3);margin-bottom:4px;">✅ Correct Solution</div>
+          <pre style="font-size:11px;margin:0;">${task.solution}</pre>
+        </div>
+      </div>
+      <div class="tip-box"><strong>🎯 Interview Tips:</strong><br>${task.tips.replace(/\n/g,'<br>')}</div>
+      <div style="margin-top:14px;display:flex;gap:8px;">
+        <button class="btn" onclick="nextTask()">Next Task →</button>
+        <button class="btn secondary" onclick="renderSimulator()">Retry This Task</button>
+      </div>
+    </div>`;
+}
+
+function revealSolution() {
+  document.getElementById('scoreBox').style.display = 'block';
+  document.getElementById('scoreBox').scrollIntoView({behavior:'smooth'});
+}
+
+function nextTask() {
+  currentSim = (currentSim + 1) % simTasks.length;
+  renderSimulator();
+  document.getElementById('simContainer').scrollIntoView({behavior:'smooth'});
+}
+
+renderSimulator();
+
+// ===================== CRASH COURSE =====================
+const top20Topics = [
+  {icon:"🏗️", t:"Custom Objects & Fields", d:"Object creation, field types, relationships"},
+  {icon:"🔗", t:"Relationships (MD vs Lookup)", d:"When to use each, cascade delete, sharing"},
+  {icon:"📊", t:"Roll-Up Summary Fields", d:"COUNT/SUM/MIN/MAX, limitations"},
+  {icon:"✅", t:"Validation Rules", d:"ISBLANK, ISPICKVAL, AND/OR, REGEX"},
+  {icon:"⚡", t:"Apex Triggers", d:"Trigger context vars, bulkification, handler pattern"},
+  {icon:"📝", t:"SOQL", d:"WHERE, IN, subqueries, aggregate, bind vars"},
+  {icon:"🏛️", t:"Governor Limits", d:"100 SOQL, 150 DML, 50k records, heap"},
+  {icon:"🧪", t:"Test Classes", d:"@TestSetup, startTest/stopTest, 75% coverage"},
+  {icon:"🖼️", t:"LWC Basics", d:"@wire, @api, @track, @AuraEnabled"},
+  {icon:"🤖", t:"Flow Builder", d:"Record-triggered, screen flows, decision elements"},
+  {icon:"🔐", t:"Security Model", d:"OWD, Role Hierarchy, Profiles, Permission Sets"},
+  {icon:"🎨", t:"Formula Fields", d:"IF, AND, OR, ISBLANK, TEXT, TODAY, nested"},
+  {icon:"📈", t:"Reports & Dashboards", d:"Report types, matrix, summary, dashboard charts"},
+  {icon:"🔄", t:"Order of Execution", d:"System validation → before → custom validation → after"},
+  {icon:"📦", t:"Apex Classes", d:"@AuraEnabled, InvocableMethod, Database methods"},
+  {icon:"🗺️", t:"Maps & Collections", d:"List, Set, Map — essential for bulkification"},
+  {icon:"🚫", t:"addError() method", d:"How to throw user-friendly errors from triggers"},
+  {icon:"🔁", t:"Trigger.new vs Trigger.old", d:"When each is available, newMap, oldMap"},
+  {icon:"🧩", t:"Approval Processes", d:"Entry criteria, approvers, actions, submit button"},
+  {icon:"☁️", t:"Deployment (Change Sets)", d:"Outbound, Inbound, what can/cannot be deployed"}
+];
+
+const top20Html = `<div class="topic-grid">${top20Topics.map((t,i) => `
+  <div class="topic-card">
+    <div class="topic-icon">${t.icon}</div>
+    <div><div style="font-weight:700;font-size:12px;color:var(--text)">${i+1}. ${t.t}</div><div style="font-size:11px;color:var(--muted)">${t.d}</div></div>
+  </div>`).join('')}</div>`;
+document.getElementById('top20topics').innerHTML = top20Html;
+
+const q50Data = [
+  "What is the difference between Master-Detail and Lookup?",
+  "What is Roll-Up Summary? When can't you use it?",
+  "Name 5 Governor Limits in Salesforce.",
+  "What is bulkification? Show an example.",
+  "What is Trigger.new vs Trigger.old? When is each available?",
+  "What are the Trigger context variables?",
+  "What is the Order of Execution?",
+  "What is @AuraEnabled? When do you add cacheable=true?",
+  "What is @wire in LWC? How is it different from imperative call?",
+  "What is Test.startTest() and Test.stopTest() used for?",
+  "What test coverage is required to deploy to production?",
+  "What is SOQL? Write a query with WHERE, IN, ORDER BY.",
+  "What is SOSL? When do you use it over SOQL?",
+  "What is a subquery in SOQL?",
+  "What are Aggregate Functions in SOQL? Name 4.",
+  "What is a Formula Field? Give 3 examples.",
+  "What is ISBLANK() vs ISNULL()?",
+  "What is ISPICKVAL()? Why not use = for picklists in formulas?",
+  "What is a Validation Rule? What does TRUE mean in a VR?",
+  "What is a Formula Field on a child vs. cross-object formula?",
+  "What is the difference between Profile and Permission Set?",
+  "What is OWD? What are the 3 main settings?",
+  "What is Role Hierarchy and how does it affect data visibility?",
+  "What is a Sharing Rule? When do you need it?",
+  "What is the difference between Public Read Only and Private OWD?",
+  "What is an Apex Test Class? Why do we need it?",
+  "@TestSetup — what does it do?",
+  "How do you test a trigger? What's a common mistake?",
+  "What is System.assertEquals()? What are its parameters?",
+  "What is DML? Name 5 DML operations.",
+  "What is Database.insert vs insert?",
+  "What is Database.SaveResult?",
+  "When do you use before trigger vs after trigger?",
+  "Can you perform DML in a before trigger on Trigger.new?",
+  "What is addError()? Give an example.",
+  "What is the Handler Pattern for triggers?",
+  "What is @AuraEnabled(cacheable=true) and when is it required?",
+  "How does @wire receive data in LWC?",
+  "What is the difference between @api, @track, and regular properties in LWC?",
+  "What is js-meta.xml in LWC?",
+  "What is a Record-Triggered Flow? When to use Flow vs Trigger?",
+  "What are the types of Flows in Salesforce?",
+  "What is an InvocableMethod? How does it connect Flow and Apex?",
+  "What is a Custom Metadata Type vs Custom Setting?",
+  "What is an Auto-Number field?",
+  "What is an External ID field? When is it used?",
+  "What is a Dependent Picklist?",
+  "How do you deploy from sandbox to production?",
+  "What is a Change Set?",
+  "What is the difference between Workflow Rule and Process Builder and Flow?"
+];
+
+document.getElementById('q50').innerHTML = q50Data.map((q,i) => `
+  <div class="task-item">
+    <div class="task-num">Q${i+1}</div>
+    <div class="task-text">${q}</div>
+  </div>`).join('');
+
+const formulasHtml = `<div class="card">
+<h3>🎨 Must-Know Formula Field Formulas</h3>
+<pre><span class="cm">-- Grade based on Score</span>
+IF(Score__c >= 90, 'A', IF(Score__c >= 70, 'B', IF(Score__c >= 50, 'C', 'F')))
+
+<span class="cm">-- Days until Close Date</span>
+CloseDate - TODAY()
+
+<span class="cm">-- Commission Amount</span>
+Amount * Commission_Rate__c / 100
+
+<span class="cm">-- Full Name (Text formula)</span>
+FirstName & ' ' & LastName
+
+<span class="cm">-- Check if Account is a big customer</span>
+IF(AND(AnnualRevenue > 1000000, ISPICKVAL(Type, 'Customer')), 'Big Customer', 'Regular')
+
+<span class="cm">-- Age from Birthdate (years)</span>
+FLOOR((TODAY() - Birthdate__c) / 365.25)
+
+<span class="cm">-- Checkbox: Is Overdue?</span>
+AND(CloseDate < TODAY(), NOT(ISPICKVAL(StageName, 'Closed Won')), NOT(ISPICKVAL(StageName, 'Closed Lost')))
+
+<span class="cm">-- Cross-object: Show Account Industry on Contact</span>
+Account.Industry  <span class="cm">-- (just traverse the relationship)</span>
+
+<span class="cm">-- Hyperlink to related record</span>
+HYPERLINK('/' & Account__c, Account__r.Name, '_blank')</pre>
+</div>
+<div class="card">
+<h3>✅ Must-Know Validation Rules</h3>
+<pre><span class="cm">-- Phone required when Account Type = Customer</span>
+AND(ISPICKVAL(Type, 'Customer'), ISBLANK(Phone))
+
+<span class="cm">-- Opportunity Amount must be positive</span>
+Amount <= 0
+
+<span class="cm">-- Email must contain @ and .</span>
+AND(NOT(ISBLANK(Email)), OR(NOT(CONTAINS(Email,'@')), NOT(CONTAINS(Email,'.'))))
+
+<span class="cm">-- Close Date cannot be in the past (for new records)</span>
+AND(ISNEW(), CloseDate < TODAY())
+
+<span class="cm">-- Discount cannot exceed 30% without approval</span>
+AND(Discount_Percent__c > 30, NOT(ISPICKVAL(Approval_Status__c, 'Approved')))
+
+<span class="cm">-- Number range check</span>
+OR(Marks__c < 0, Marks__c > 100)
+
+<span class="cm">-- REGEX: Indian Mobile Number (10 digits starting with 6-9)</span>
+AND(NOT(ISBLANK(Phone)), NOT(REGEX(Phone, "[6-9][0-9]{9}")))</pre>
+</div>`;
+document.getElementById('keyFormulas').innerHTML = formulasHtml;
+
+const keySoqlHtml = `<div class="card">
+<h3>📝 Top 10 Must-Know SOQL Queries</h3>
+<pre><span class="cm">1. Basic with multiple conditions</span>
+SELECT Id, Name FROM Account 
+WHERE Industry = 'Technology' AND AnnualRevenue > 100000
+
+<span class="cm">2. IN operator</span>
+SELECT Id, Name FROM Account WHERE Type IN ('Customer','Partner')
+
+<span class="cm">3. Subquery (Parent-to-Child)</span>
+SELECT Id, Name, (SELECT Id, Name FROM Contacts) FROM Account
+
+<span class="cm">4. Child-to-Parent traversal</span>
+SELECT Id, LastName, Account.Name FROM Contact
+
+<span class="cm">5. Aggregate: COUNT + GROUP BY</span>
+SELECT StageName, COUNT(Id) cnt, SUM(Amount) total
+FROM Opportunity GROUP BY StageName
+
+<span class="cm">6. Date filter</span>
+SELECT Id FROM Opportunity WHERE CloseDate = THIS_QUARTER
+
+<span class="cm">7. HAVING (filter aggregates)</span>
+SELECT AccountId, COUNT(Id) cnt FROM Opportunity
+GROUP BY AccountId HAVING COUNT(Id) > 3
+
+<span class="cm">8. Bind variable in Apex</span>
+String stage = 'Closed Won';
+List&lt;Opportunity&gt; opps = [SELECT Id FROM Opportunity WHERE StageName = :stage];
+
+<span class="cm">9. Map from query</span>
+Map&lt;Id, Account&gt; accMap = new Map&lt;Id, Account&gt;([SELECT Id, Name FROM Account]);
+
+<span class="cm">10. NULL check</span>
+SELECT Id FROM Contact WHERE Email != null AND AccountId = null</pre>
+</div>`;
+document.getElementById('keySoql').innerHTML = keySoqlHtml;
+
+const triggerPatternsHtml = `<div class="card">
+<h3>🔄 Must-Know Trigger Patterns</h3>
+<pre><span class="cm">Pattern 1: Bulkified field population (before insert)</span>
+trigger T on Contact (before insert) {
+    for(Contact c : Trigger.new) {
+        c.Description = 'Added: ' + Date.today();  // No SOQL/DML in loop = OK
+    }
+}
+
+<span class="cm">Pattern 2: Query related data (bulkified, SOQL outside loop)</span>
+trigger T on Contact (after insert) {
+    Set&lt;Id&gt; accIds = new Set&lt;Id&gt;();
+    for(Contact c : Trigger.new) if(c.AccountId != null) accIds.add(c.AccountId);
+    
+    Map&lt;Id, Account&gt; accMap = new Map&lt;Id, Account&gt;(
+        [SELECT Id, Industry FROM Account WHERE Id IN :accIds]
+    );
+    // Now use accMap.get(c.AccountId) in another loop
+}
+
+<span class="cm">Pattern 3: Prevent operation with addError()</span>
+trigger T on Opportunity (before delete) {
+    for(Opportunity opp : Trigger.old) {
+        if(opp.StageName == 'Closed Won') {
+            opp.addError('Cannot delete a Closed Won opportunity!');
+        }
+    }
+}
+
+<span class="cm">Pattern 4: Detect field change (before/after update)</span>
+trigger T on Account (before update) {
+    for(Account acc : Trigger.new) {
+        Account oldAcc = Trigger.oldMap.get(acc.Id);
+        if(acc.Industry != oldAcc.Industry) {
+            acc.Description = 'Industry changed from: ' + oldAcc.Industry;
+        }
+    }
+}
+
+<span class="cm">Pattern 5: Create related records (after insert)</span>
+trigger T on Account (after insert) {
+    List&lt;Contact&gt; contacts = new List&lt;Contact&gt;();
+    for(Account acc : Trigger.new) {
+        contacts.add(new Contact(
+            LastName = 'Primary - ' + acc.Name,
+            AccountId = acc.Id
+        ));
+    }
+    if(!contacts.isEmpty()) insert contacts;  // Single DML - not in loop!
+}</pre>
+</div>`;
+document.getElementById('triggerPatterns').innerHTML = triggerPatternsHtml;
+
+// ===================== SURVIVAL MODE =====================
+document.getElementById('plan3days').innerHTML = `
+<div class="day-block">
+  <div class="day-label">📅 DAY 1 — Admin Mastery (8 hours)</div>
+  ${[
+    ["8:00–10:00","Custom Objects & Fields","Create Student, Employee, Order objects. Practice all field types: Text, Number, Currency, Date, Picklist, Formula, Auto-Number."],
+    ["10:00–12:00","Relationships","Create Lookup + Master-Detail + Junction Object. Practice Roll-Up Summary (COUNT + SUM). Test cascade delete."],
+    ["12:00–13:00","Break","Rest + eat. Review your notes."],
+    ["13:00–15:00","Validation Rules","Write 10 validation rules using ISBLANK, ISPICKVAL, AND, OR, REGEX. Test each one."],
+    ["15:00–17:00","Formula Fields","Practice IF/AND/OR nested formulas. Cross-object formulas. Date formulas."],
+    ["17:00–19:00","Reports & Dashboards","Create Summary, Matrix reports. Build dashboard with 3 chart types."],
+    ["19:00–20:00","Flow Builder","Build 1 Record-Triggered Flow. Create a Task on Opportunity insert."]
+  ].map(([t,h,d]) => `<div class="hour-row"><div class="hour-label">${t}</div><div class="hour-text"><strong>${h}:</strong> ${d}</div></div>`).join('')}
+</div>
+<div class="day-block">
+  <div class="day-label">📅 DAY 2 — SOQL + Apex (8 hours)</div>
+  ${[
+    ["8:00–10:00","SOQL Basics","Practice all 10 must-know queries in Dev Console. GROUP BY, HAVING, subqueries."],
+    ["10:00–13:00","Apex Fundamentals","Apex classes, Collections (List/Map/Set), Database.insert, @AuraEnabled. Write 5 Apex methods."],
+    ["13:00–14:00","Break",""],
+    ["14:00–17:00","Apex Triggers","Write 5 triggers using all 5 patterns. Focus on bulkification. Write Handler class."],
+    ["17:00–19:00","Test Classes","Write test classes for all your triggers. Achieve 80%+ coverage. Practice @TestSetup."],
+    ["19:00–20:00","Governor Limits","Memorize the top 6 limits. Review why SOQL/DML in loops is bad."]
+  ].map(([t,h,d]) => `<div class="hour-row"><div class="hour-label">${t}</div><div class="hour-text"><strong>${h}:</strong> ${d}</div></div>`).join('')}
+</div>
+<div class="day-block">
+  <div class="day-label">📅 DAY 3 — LWC + Mock Exam (8 hours)</div>
+  ${[
+    ["8:00–10:00","LWC Basics","Build 3 LWC components: Hello World, @wire Apex call, imperative Apex call."],
+    ["10:00–11:00","Security Model","OWD, Role Hierarchy, Profiles vs Permission Sets. Review Sharing Rules."],
+    ["11:00–13:00","Mock Exam 1","Do the simulator in this guide. Answer all 5 tasks without hints. Time yourself."],
+    ["13:00–14:00","Break",""],
+    ["14:00–16:00","Review Weak Areas","Go back to topics you struggled with. Re-do them from scratch."],
+    ["16:00–18:00","Top 50 Questions","Read through all 50 Q&A in the Crash Course tab. Speak answers aloud."],
+    ["18:00–20:00","Final Mock Exam","Build a mini app from scratch: Object + Trigger + Test Class + LWC. Simulate the 3-hour exam."]
+  ].map(([t,h,d]) => `<div class="hour-row"><div class="hour-label">${t}</div><div class="hour-text"><strong>${h}:</strong> ${d}</div></div>`).join('')}
+</div>`;
+
+document.getElementById('plan1day').innerHTML = `
+<div class="hero" style="padding:20px;">
+  <h1 style="font-size:18px;">🕐 1 Day Emergency Plan — 8 Focused Hours</h1>
+</div>
+<div class="day-block">
+  <div class="day-label">⚡ Hour-by-Hour Emergency Plan</div>
+  ${[
+    ["Hour 1","Admin Quick Revision","Skim: Custom Objects, Field Types, Formula Fields, Validation Rules. No building — just read and understand the concepts."],
+    ["Hour 2","Relationships Deep Dive","MD vs Lookup differences. Roll-Up Summary. When and why. Write it out on paper."],
+    ["Hour 3","SOQL Mastery","Write all 10 must-know queries in Dev Console. Don't just read — type them. Bind variables, IN, subqueries."],
+    ["Hour 4","Trigger Patterns (MOST IMPORTANT)","Write all 5 trigger patterns from scratch. Understand why SOQL in loop is bad. Handler pattern."],
+    ["Hour 5","Test Classes","Write 1 complete test class. Practice @TestSetup, startTest/stopTest, assertEquals. 75% coverage rule."],
+    ["Hour 6","LWC + @AuraEnabled","Build 1 LWC with @wire and 1 with imperative call. Understand @api, @track."],
+    ["Hour 7","Mock Exam","Go to Simulator tab. Do all 5 tasks in order without hints. This is your dry run."],
+    ["Hour 8","Review + Memorize","Governor Limits by heart. Order of Execution. Top 20 MCQ answers."]
+  ].map(([t,h,d]) => `<div class="hour-row"><div class="hour-label">${t}</div><div class="hour-text"><strong>${h}:</strong> ${d}</div></div>`).join('')}
+</div>`;
+
+document.getElementById('plan3hours').innerHTML = `
+<div class="hero" style="padding:20px;border-color:rgba(239,68,68,0.4);">
+  <h1 style="font-size:18px;color:#f87171;">🚨 3 HOURS ONLY — Maximum Impact Revision</h1>
+  <p>Focus ONLY on these. Skip everything else.</p>
+</div>
+<div style="margin-bottom:16px">
+${[
+  ["HOUR 1 (0-60 min)","⚡ TRIGGERS & APEX","Write these 2 patterns from memory:\n1. Bulkified trigger with Map (SOQL outside loop)\n2. Trigger that uses addError() to prevent delete\nThen write a simple Test Class for one of them."],
+  ["HOUR 2 (60-120 min)","📝 SOQL + ADMIN","Memorize: 100 SOQL limit, 150 DML limit\nWrite from memory: SELECT with WHERE IN, subquery, GROUP BY\nAdmin: MD vs Lookup differences. Roll-Up Summary (what it does, its limits). Validation Rule with ISBLANK + ISPICKVAL."],
+  ["HOUR 3 (120-180 min)","🧠 MCQ PREPARATION","Read all 50 questions in Crash Course → Q50 tab. Say answers aloud.\nMEMORIZE: @AuraEnabled, @wire, @api, @track roles in LWC.\nMEMORIZE: Order of Execution (before trigger → validation → after trigger)\nMEMORIZE: 75% test coverage, cascading delete in MD."]
+].map(([t,h,d]) => `<div class="emg-item">
+  <div style="min-width:130px;font-weight:700;color:var(--warn);font-size:12px;">${t}</div>
+  <div><div style="font-weight:700;color:var(--text);margin-bottom:4px;">${h}</div><div style="color:var(--muted);font-size:12px;white-space:pre-line;">${d}</div></div>
+</div>`).join('')}
+</div>
+<div class="card" style="border-color:rgba(239,68,68,0.3);">
+  <h3 style="color:#f87171;">🎯 The 10 Things You MUST Know Cold</h3>
+  ${[
+    "SOQL limit = 100 per transaction. DML limit = 150.",
+    "Never put SOQL or DML inside a for loop.",
+    "Before trigger: modify Trigger.new directly. No DML needed.",
+    "After trigger: use DML for related records. Cannot modify Trigger.new.",
+    "Test coverage: 75% minimum to deploy to production.",
+    "Master-Detail: cascade delete, Roll-Up Summary, child shares parent's security.",
+    "Lookup: no cascade delete, no Roll-Up Summary, child can exist without parent.",
+    "@AuraEnabled(cacheable=true) required for @wire adapter in LWC.",
+    "Validation Rule returns TRUE = error is shown.",
+    "Order: System Val → Before Trigger → Custom Validation → Save → After Trigger"
+  ].map((t,i) => `<div class="emg-item"><div class="emg-num">${i+1}</div><div>${t}</div></div>`).join('')}
+</div>`;
+</script>
+</body>
+</html>
